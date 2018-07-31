@@ -62,7 +62,6 @@ RUN apt-get install -y libopenblas-dev python-numpy python-dev swig git python-p
 RUN apt-get -y autoremove
 RUN apt-get clean
 
-RUN pip install --no-cache-dir --upgrade --ignore-installed pip
 RUN pip install cython matplotlib pandas jupyter sklearn scipy
 
 COPY . /opt/faiss
