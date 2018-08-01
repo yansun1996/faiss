@@ -1,5 +1,5 @@
 # Dockerfile with tensorflow gpu support. Install CV related packages.
-FROM tensorflow/tensorflow:1.4.0-gpu
+FROM nvidia/cuda:8.0-devel-ubuntu16.04
 MAINTAINER Yan Sun <sunyanfred@163.com>
 
 # The code below is all based off the repos made by https://github.com/janza/
@@ -50,6 +50,7 @@ RUN apt-get update && \
     apt-get install -y curl bzip2  && \
     conda update -n base conda && \
     conda install faiss-gpu -c pytorch && \
+    conda install -c anaconda tensorflow-gpu==1.4.1 && \
     apt-get remove -y --auto-remove curl bzip2 && \
     apt-get clean && \
     rm -fr /tmp/conda.sh
