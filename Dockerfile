@@ -56,34 +56,16 @@ RUN pip install \
 RUN pip install h5py --upgrade
 
 # Install faiss
-RUN apt-get update -y
-RUN apt-get upgrade -y
-RUN apt-get install -y libopenblas-dev python-numpy python-dev swig git python-pip wget vim python-tk
-RUN apt-get -y autoremove
-RUN apt-get clean
+RUN apt-get update && \
+    apt-get install -y curl bzip2  && \
+    curl https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh > /tmp/conda.sh && \
+    bash /tmp/conda.sh -b -p /opt/conda && \
+    /opt/conda/bin/conda update -n base conda && \
+    /opt/conda/bin/conda faiss-gpu -c pytorch && \
+    apt-get remove -y --auto-remove curl bzip2 && \
+    apt-get clean && \
+    rm -fr /tmp/conda.sh
 
-RUN pip install cython matplotlib pandas jupyter sklearn scipy
+ENV PATH="/opt/conda/bin:${PATH}"
 
-COPY . /opt/faiss
-
-WORKDIR /opt/faiss
-
-RUN ./configure
-
-RUN make -j $(nproc) && make test
-
-RUN make -C gpu -j $(nproc) && make -C gpu/tests && \
-    ./gpu/tests/demo_ivfpq_indexing_gpu
-
-RUN make -C python gpu && \
-    make -C python build && \
-    make -C python test && \
-    make -C python install
-
-RUN curl -L ftp://ftp.irisa.fr/local/texmex/corpus/sift.tar.gz | tar xz && \
-    mv sift sift1M
-
-RUN demos/demo_sift1M
-
-RUN echo "export PYTHONPATH=\$PYTHONPATH:/opt/faiss" >> ~/.bashrc
 ENV PYTHONPATH "$PYTHONPATH:/opt/faiss"
