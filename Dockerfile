@@ -56,10 +56,18 @@ RUN pip install \
 RUN pip install h5py --upgrade
 
 # Install faiss
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV PATH /opt/conda/bin:$PATH
+
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda2-4.5.4-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc
+
 RUN apt-get update && \
     apt-get install -y curl bzip2  && \
-    wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh > /tmp/conda.sh && \
-    bash /tmp/conda.sh && \
     conda update -n base conda && \
     conda install faiss-gpu -c pytorch && \
     apt-get remove -y --auto-remove curl bzip2 && \
