@@ -35,26 +35,6 @@ RUN apt-get install -y \
         vim \
         zip
 
-# Update pip
-RUN pip install --upgrade pip
-
-# Python dependencies
-RUN pip install \
-    numpy \
-    hdf5storage \
-    h5py \
-    scipy \
-    py3nvml \
-    scikit-learn \
-    psutil \
-    Pillow \
-    matplotlib \
-    requests \
-    opencv-python
-    
-# Update h5py
-RUN pip install h5py --upgrade
-
 # Install faiss
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
@@ -77,3 +57,23 @@ RUN apt-get update && \
 ENV PATH="/opt/conda/bin:${PATH}"
 
 ENV PYTHONPATH "$PYTHONPATH:/opt/faiss"
+
+# Update pip
+RUN pip install --upgrade pip
+
+# Python dependencies
+RUN pip install \
+    numpy \
+    hdf5storage \
+    h5py \
+    scipy \
+    py3nvml \
+    scikit-learn \
+    psutil \
+    Pillow \
+    matplotlib \
+    requests \
+    opencv-python
+    
+# Update h5py
+RUN pip install h5py --upgrade
